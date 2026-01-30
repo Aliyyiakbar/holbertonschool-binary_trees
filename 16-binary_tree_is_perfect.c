@@ -72,5 +72,5 @@ int binary_tree_is_perfect(const binary_tree_t *tree)
 		return (0);
 	}
 
-	return ((int)binary_tree_leaves(tree) == (1 << (int)binary_tree_height(tree)));
+	return ((int)binary_tree_leaves(tree) == (1 << binary_tree_height(tree)));
 }
