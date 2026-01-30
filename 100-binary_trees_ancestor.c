@@ -30,7 +30,8 @@ size_t binary_tree_depth(const binary_tree_t *node)
  *         or NULL if not found.
  */
 
-binary_tree_t *binary_trees_ancestor(const binary_tree_t *first, const binary_tree_t *second)
+binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
+	const binary_tree_t *second)
 {
 	const binary_tree_t *f = first, *s = second;
 	size_t df = binary_tree_depth(first), ds = binary_tree_depth(second);
