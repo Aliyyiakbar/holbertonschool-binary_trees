@@ -27,8 +27,8 @@ binary_tree_t *_binary_tree_sibling(binary_tree_t *node)
 }
 
 /**
- * binary_tree_height - measures the height of a binary tree
- * @tree: pointer to the root node of the tree to measure the height
+ * binary_tree_uncle - measures the height of a binary tree
+ * @node: pointer to the root node of the tree to measure the height
  *
  * Return: height of the tree, or 0 if tree is NULL
  */
