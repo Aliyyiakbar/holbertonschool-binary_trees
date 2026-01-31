@@ -44,29 +44,23 @@ bst_t *bst_insert(bst_t **tree, int value)
 	{
 		return (NULL);
 	}
-
 	nw = bt_node(NULL, value);
 	if (nw == NULL)
 	{
 		return (NULL);
 	}
-
 	if (*tree == NULL)
 	{
 		*tree = nw;
-
 		return (nw);
 	}
-
 	cur = *tree;
 	while (1)
 	{
 		par = cur;
-
 		if (value < cur->n)
 		{
 			cur = cur->left;
-
 			if (cur == NULL)
 			{
 				par->left = nw;
@@ -77,7 +71,6 @@ bst_t *bst_insert(bst_t **tree, int value)
 		else if (value > cur->n)
 		{
 			cur = cur->right;
-
 			if (cur == NULL)
 			{
 				par->right = nw;
@@ -88,7 +81,6 @@ bst_t *bst_insert(bst_t **tree, int value)
 		else
 		{
 			free(nw);
-
 			return (NULL);
 		}
 	}
