@@ -6,7 +6,7 @@
  *
  * Return: Height, or 0 if NULL
  */
-int avl_height(const avl_t *tree)
+static int avl_height(const avl_t *tree)
 {
 	int l, r;
 
@@ -78,7 +78,7 @@ static avl_t *rotate_attach(avl_t **root, avl_t *subroot, char dir)
  * @root: Double pointer to AVL root (may change)
  * @node: Start node (typically parent of deleted node)
  */
-void rebalance_up(avl_t **root, avl_t *node)
+static void rebalance_up(avl_t **root, avl_t *node)
 {
 	int bal;
 	avl_t *cur, *rot;
@@ -97,10 +97,8 @@ void rebalance_up(avl_t **root, avl_t *node)
 			}
 			rot = rotate_attach(root, cur, 'R');
 			cur = (rot != NULL) ? rot->parent : cur->parent;
-			continue;
 		}
-
-		if (bal < -1)
+		else if (bal < -1)
 		{
 			if (avl_height(cur->right->right) < avl_height(cur->right->left))
 			{
@@ -108,41 +106,24 @@ void rebalance_up(avl_t **root, avl_t *node)
 			}
 			rot = rotate_attach(root, cur, 'L');
 			cur = (rot != NULL) ? rot->parent : cur->parent;
-			continue;
 		}
-
-		cur = cur->parent;
+		else
+		{
+			cur = cur->parent;
+		}
 	}
 }
 
 /**
- * avl_remove - Removes a node from an AVL tree
- * @root: Pointer to the root node of the AVL tree
- * @value: Value of the node to be removed
+ * bst_delete_node - Deletes a node like in BST (successor for 2 children)
+ * @root: Double pointer to AVL root (may change if deleting the root)
+ * @node: Node to delete
  *
- * Return: Pointer to the new root node of the modified AVL tree
+ * Return: Parent to start rebalancing from (may be NULL)
  */
-avl_t *avl_remove(avl_t *root, int value)
+static avl_t *bst_delete_node(avl_t **root, avl_t *node)
 {
-	avl_t *node, *succ, *parent, *child;
-
-	node = root;
-	while (node != NULL && node->n != value)
-	{
-		if (value < node->n)
-		{
-			node = node->left;
-		}
-		else
-		{
-			node = node->right;
-		}
-	}
-
-	if (node == NULL)
-	{
-		return (root);
-	}
+	avl_t *succ, *parent, *child;
 
 	if (node->left != NULL && node->right != NULL)
 	{
@@ -165,22 +146,56 @@ avl_t *avl_remove(avl_t *root, int value)
 
 	if (parent == NULL)
 	{
+		*root = child;
 		free(node);
-		root = child;
+		return (NULL);
+	}
+
+	if (parent->left == node)
+	{
+		parent->left = child;
 	}
 	else
 	{
-		if (parent->left == node)
+		parent->right = child;
+	}
+
+	free(node);
+	return (parent);
+}
+
+/**
+ * avl_remove - Removes a node from an AVL tree
+ * @root: Pointer to the root node of the AVL tree
+ * @value: Value of the node to be removed
+ *
+ * Return: Pointer to the new root node of the modified AVL tree
+ */
+avl_t *avl_remove(avl_t *root, int value)
+{
+	avl_t *node, *reb;
+
+	node = root;
+
+	while (node != NULL && node->n != value)
+	{
+		if (value < node->n)
 		{
-			parent->left = child;
+			node = node->left;
 		}
 		else
 		{
-			parent->right = child;
+			node = node->right;
 		}
-		free(node);
 	}
 
-	rebalance_up(&root, parent);
+	if (node == NULL)
+	{
+		return (root);
+	}
+
+	reb = bst_delete_node(&root, node);
+	rebalance_up(&root, reb);
+
 	return (root);
 }
