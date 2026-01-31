@@ -1,6 +1,35 @@
 #include "binary_trees.h"
 
 /**
+ * _bst_search - Searches for a value in a Binary Search Tree
+ * @tree: Pointer to the root node of the BST to search
+ * @value: Value to search for
+ *
+ * Return: Pointer to the node containing the value, or NULL if not found
+ */
+
+bst_t *_bst_search(const bst_t *tree, int value)
+{
+	if (tree == NULL)
+	{
+		return (NULL);
+	}
+
+	if (tree->n == value)
+	{
+		return ((bst_t *)tree);
+	}
+	else if (value < tree->n)
+	{
+		return (_bst_search(tree->left, value));
+	}
+	else
+	{
+		return (_bst_search(tree->right, value));
+	}
+}
+
+/**
  * bst_remove - Removes a node from a Binary Search Tree
  * @root: A pointer to the root node of the BST
  * @value: The value to remove from the BST
@@ -17,7 +46,7 @@ bst_t *bst_remove(bst_t *root, int value)
 		return (NULL);
 	}
 
-	del = bst_search(root, value);
+	del = _bst_search(root, value);
 	if (del == NULL)
 	{
 		return (root);
