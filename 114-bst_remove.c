@@ -7,11 +7,10 @@
  *
  * Return: Pointer to the node containing the value, or NULL if not found
  */
-
 bst_t *_bst_search(const bst_t *tree, int value)
 {
-	if (tree == NULL)
-	{
+    if (tree == NULL)
+    {
 		return (NULL);
 	}
 
@@ -36,24 +35,20 @@ bst_t *_bst_search(const bst_t *tree, int value)
  *
  * Return: A pointer to the new root node of the BST after removal
  */
-
 bst_t *bst_remove(bst_t *root, int value)
 {
-	bst_t *del, *par, *scc;
+	bst_t *del, *par, *scc, *low;
 
 	if (root == NULL)
 	{
 		return (NULL);
 	}
-
 	del = _bst_search(root, value);
 	if (del == NULL)
 	{
 		return (root);
 	}
-
 	par = del->parent;
-
 	if (del->left == NULL && del->right == NULL)
 	{
 		if (par == NULL)
@@ -61,7 +56,6 @@ bst_t *bst_remove(bst_t *root, int value)
 			free(del);
 			return (NULL);
 		}
-
 		if (par->left == del)
 		{
 			par->left = NULL;
@@ -79,19 +73,41 @@ bst_t *bst_remove(bst_t *root, int value)
 		{
 			scc = scc->left;
 		}
-
 		del->n = scc->n;
-		root = bst_remove(root, scc->n);
+		par = scc->parent;
+		if (scc->right != NULL)
+		{
+			if (par->left == scc)
+			{
+				par->left = scc->right;
+			}
+			else
+			{
+				par->right = scc->right;
+			}
+			scc->right->parent = par;
+		}
+		else
+		{
+			if (par->left == scc)
+			{
+				par->left = NULL;
+			}
+			else
+			{
+				par->right = NULL;
+			}
+		}
+		free(scc);
 	}
 	else
 	{
-		bst_t *low = (del->left != NULL) ? del->left : del->right;
-
+		low = (del->left != NULL) ? del->left : del->right;
 		if (par == NULL)
 		{
 			low->parent = NULL;
 			free(del);
-			return low;
+			return (low);
 		}
 		if (par->left == del)
 		{
@@ -101,7 +117,6 @@ bst_t *bst_remove(bst_t *root, int value)
 		{
 			par->right = low;
 		}
-
 		low->parent = par;
 		free(del);
 	}
