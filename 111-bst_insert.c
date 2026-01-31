@@ -2,7 +2,7 @@
 
 
 /**
- * binary_tree_node - Creates a binary tree node
+ * bt_node - Creates a binary tree node
  *
  * @parent: Pointer to the parent node
  * @value: Value to put in the new node
@@ -10,7 +10,7 @@
  * Return: Pointer to the new node, or NULL on failure
  */
 
-binary_tree_t *binary_tree_node(binary_tree_t *parent, int value)
+binary_tree_t *bt_node(binary_tree_t *parent, int value)
 {
 	binary_tree_t *new_node = malloc(sizeof(binary_tree_t));
 
@@ -45,7 +45,7 @@ bst_t *bst_insert(bst_t **tree, int value)
 		return (NULL);
 	}
 
-	nw = binary_tree_node(NULL, value);
+	nw = bt_node(NULL, value);
 	if (nw == NULL)
 	{
 		return (NULL);
