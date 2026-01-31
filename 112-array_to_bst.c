@@ -106,11 +106,11 @@ bst_t *_bst_insert(bst_t **tree, int value)
  *
  * Return: Pointer to the root node of the created BST, or NULL on failure
  */
-
 bst_t *array_to_bst(int *array, size_t size)
 {
 	bst_t *root = NULL;
 	size_t i;
+	int dup;
 
 	if (array == NULL || size == 0)
 	{
@@ -119,6 +119,13 @@ bst_t *array_to_bst(int *array, size_t size)
 
 	for (i = 0; i < size; ++i)
 	{
+		(void)findPar(root, array[i], &dup);
+
+		if (dup)
+		{
+			continue;
+		}
+
 		if (_bst_insert(&root, array[i]) == NULL)
 		{
 			_bt_del(root);
