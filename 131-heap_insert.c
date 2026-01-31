@@ -40,6 +40,7 @@ static heap_t *node_at_index(heap_t *root, size_t index)
 	{
 		bit <<= 1;
 	}
+
 	bit >>= 2;
 
 	while (bit > 0 && cur != NULL)
@@ -52,6 +53,7 @@ static heap_t *node_at_index(heap_t *root, size_t index)
 		{
 			cur = cur->left;
 		}
+
 		bit >>= 1;
 	}
 
