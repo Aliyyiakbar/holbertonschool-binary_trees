@@ -27,7 +27,7 @@ int is_complete(const binary_tree_t *tree, size_t index, size_t number_nodes)
 }
 
 /**
- * binary_tree_size - Measures the size of a binary tree
+ * bt_size - Measures the size of a binary tree
  * @tree: Pointer to the root node of the tree to measure the size
  *
  * Return: Size of the tree, or 0 if tree is NULL
