@@ -16,13 +16,10 @@ bst_t *bst_insert(bst_t **tree, int value)
 	{
 		return (NULL);
 	}
-
 	cur = *tree;
-
 	while (cur != NULL)
 	{
 		par = cur;
-
 		if (value == cur->n)
 		{
 			return (NULL);
@@ -36,18 +33,15 @@ bst_t *bst_insert(bst_t **tree, int value)
 			cur = cur->right;
 		}
 	}
-
 	new = malloc(sizeof(bst_t));
 	if (new == NULL)
 	{
 		return (NULL);
 	}
-
 	new->n = value;
 	new->parent = par;
 	new->left = NULL;
 	new->right = NULL;
-
 	if (par == NULL)
 	{
 		*tree = new;
