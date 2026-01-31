@@ -1,46 +1,33 @@
 #include "binary_trees.h"
 
-
 /**
- * bt_node - Creates a binary tree node
+ * bst_insert - Inserts a value into a Binary Search Tree
+ * @tree: Double pointer to the root node of the BST
+ * @value: Value to insert into the BST
  *
- * @par: Pointer to the par node
- * @value: Value to put in the new node
- *
- * Return: Pointer to the new node, or NULL on failure
+ * Return: Pointer to the newly inserted node, or NULL on failure / duplicate
  */
 
-binary_tree_t *bt_node(binary_tree_t *par, int value)
+bst_t *bst_insert(bst_t **tree, int value)
 {
-	binary_tree_t *new_node = malloc(sizeof(binary_tree_t));
+	bst_t *cur, *par = NULL, *new;
 
-	if (new_node == NULL)
+	if (tree == NULL)
 	{
 		return (NULL);
 	}
 
-	new_node->n = value;
-	new_node->parent = par;
-	new_node->left = NULL;
-	new_node->right = NULL;
+	cur = *tree;
 
-	return (new_node);
-}
-
-/**
- * work - Helper function to find the correct insertion point
- *
- * @cur: Current node being examined
- * @par: Pointer to the parent node pointer
- */
-
-void work(bst_t *cur, bst_t *par)
-{
 	while (cur != NULL)
 	{
 		par = cur;
 
-		if (cur->n > cur->n)
+		if (value == cur->n)
+		{
+			return (NULL);
+		}
+		else if (value < cur->n)
 		{
 			cur = cur->left;
 		}
@@ -49,46 +36,23 @@ void work(bst_t *cur, bst_t *par)
 			cur = cur->right;
 		}
 	}
-}
 
-/**
- * bst_insert - Inserts a value into a Binary Search Tree
- *
- * @tree: Double pointer to the root node of the BST
- * @value: Value to insert into the BST
- *
- * Return: Pointer to the newly inserted node, or NULL on failure
- */
-
-bst_t *bst_insert(bst_t **tree, int value)
-{
-	bst_t *new, *cur, *par;
-
-	if (tree == NULL)
-	{
-		return (NULL);
-	}
-
-	new = (bst_t *)bt_node(NULL, value);
-
+	new = malloc(sizeof(bst_t));
 	if (new == NULL)
 	{
 		return (NULL);
 	}
 
-	if (*tree == NULL)
+	new->n = value;
+	new->parent = par;
+	new->left = NULL;
+	new->right = NULL;
+
+	if (par == NULL)
 	{
 		*tree = new;
-
-		return (new);
 	}
-
-	cur = *tree;
-	par = NULL;
-	work(cur, par);
-	new->parent = par;
-
-	if (value < par->n)
+	else if (value < par->n)
 	{
 		par->left = new;
 	}
