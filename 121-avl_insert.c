@@ -16,12 +16,6 @@ static avl_t *bst_insert_node(avl_t **tree, int value)
 		return (NULL);
 	}
 
-	if (*tree == NULL)
-	{
-		*tree = (avl_t *)binary_tree_node(NULL, value);
-		return (*tree);
-	}
-
 	cur = *tree;
 	parent = NULL;
 
@@ -29,24 +23,24 @@ static avl_t *bst_insert_node(avl_t **tree, int value)
 	{
 		parent = cur;
 
-		if (value < cur->n)
-		{
-			cur = cur->left;
-		}
-		else if (value > cur->n)
-		{
-			cur = cur->right;
-		}
-		else
+		if (value == cur->n)
 		{
 			return (NULL);
 		}
+
+		cur = (value < cur->n) ? cur->left : cur->right;
 	}
 
 	new_node = (avl_t *)binary_tree_node(parent, value);
 	if (new_node == NULL)
 	{
 		return (NULL);
+	}
+
+	if (parent == NULL)
+	{
+		*tree = new_node;
+		return (new_node);
 	}
 
 	if (value < parent->n)
@@ -62,10 +56,10 @@ static avl_t *bst_insert_node(avl_t **tree, int value)
 }
 
 /**
- * avl_height - Measures height (as int) to avoid size_t underflow issues
+ * avl_height - Measures height safely as int
  * @tree: Pointer to the node
  *
- * Return: Height of the tree, 0 if NULL
+ * Return: Height, or 0 if NULL
  */
 static int avl_height(const avl_t *tree)
 {
@@ -83,9 +77,9 @@ static int avl_height(const avl_t *tree)
 }
 
 /**
- * rotate_attach - Rotates subroot and re-attaches it to its old parent
+ * rotate_attach - Rotates a subtree and re-attaches it to its old parent
  * @tree: Double pointer to the global root (may change)
- * @subroot: Pointer to subtree root to rotate
+ * @subroot: Subtree root to rotate
  * @dir: 'L' for left rotation, 'R' for right rotation
  *
  * Return: New subtree root after rotation, or NULL on failure
@@ -93,7 +87,7 @@ static int avl_height(const avl_t *tree)
 static avl_t *rotate_attach(avl_t **tree, avl_t *subroot, char dir)
 {
 	avl_t *parent, *new_root;
-	int was_left;
+	int is_left;
 
 	if (tree == NULL || subroot == NULL)
 	{
@@ -101,12 +95,7 @@ static avl_t *rotate_attach(avl_t **tree, avl_t *subroot, char dir)
 	}
 
 	parent = subroot->parent;
-	was_left = 0;
-
-	if (parent != NULL && parent->left == subroot)
-	{
-		was_left = 1;
-	}
+	is_left = (parent != NULL && parent->left == subroot);
 
 	if (dir == 'L')
 	{
@@ -125,69 +114,58 @@ static avl_t *rotate_attach(avl_t **tree, avl_t *subroot, char dir)
 	if (parent == NULL)
 	{
 		*tree = new_root;
-		new_root->parent = NULL;
 	}
-	else if (was_left)
+	else if (is_left)
 	{
 		parent->left = new_root;
-		new_root->parent = parent;
 	}
 	else
 	{
 		parent->right = new_root;
-		new_root->parent = parent;
 	}
 
+	new_root->parent = parent;
 	return (new_root);
 }
 
 /**
- * rebalance_up - Rebalances an AVL tree from a starting node up to the root
+ * rebalance_up - Rebalances an AVL tree from a node up to the root
  * @tree: Double pointer to the AVL root (may change)
- * @node: Start node (usually the parent of the inserted node)
+ * @node: Start node (usually parent of inserted node)
  */
 static void rebalance_up(avl_t **tree, avl_t *node)
 {
-	int bal, lh, rh;
-	avl_t *new_root;
+	int bal;
+	avl_t *cur, *rot;
 
-	while (node != NULL)
+	cur = node;
+
+	while (cur != NULL)
 	{
-		lh = avl_height(node->left);
-		rh = avl_height(node->right);
-		bal = lh - rh;
+		bal = avl_height(cur->left) - avl_height(cur->right);
 
 		if (bal > 1)
 		{
-			if (avl_height(node->left->left) < avl_height(node->left->right))
+			if (avl_height(cur->left->left) < avl_height(cur->left->right))
 			{
-				(void)rotate_attach(tree, node->left, 'L');
+				(void)rotate_attach(tree, cur->left, 'L');
 			}
-			new_root = rotate_attach(tree, node, 'R');
-			if (new_root == NULL)
-			{
-				return;
-			}
-			node = new_root->parent;
-			continue;
+			rot = rotate_attach(tree, cur, 'R');
+			cur = (rot == NULL) ? cur->parent : rot->parent;
 		}
-
-		if (bal < -1)
+		else if (bal < -1)
 		{
-			if (avl_height(node->right->right) < avl_height(node->right->left))
+			if (avl_height(cur->right->right) < avl_height(cur->right->left))
 			{
-				(void)rotate_attach(tree, node->right, 'R');
+				(void)rotate_attach(tree, cur->right, 'R');
 			}
-			new_root = rotate_attach(tree, node, 'L');
-			if (new_root == NULL)
-			{
-				return;
-			}
-			node = new_root->parent;
-			continue;
+			rot = rotate_attach(tree, cur, 'L');
+			cur = (rot == NULL) ? cur->parent : rot->parent;
 		}
-
-		node = node->parent;
+		else
+		{
+			cur = cur->parent;
+		}
 	}
 }
 
