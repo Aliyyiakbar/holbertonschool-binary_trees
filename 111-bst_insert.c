@@ -27,6 +27,39 @@ binary_tree_t *bt_node(binary_tree_t *par, int value)
 	return (new_node);
 }
 
+/**
+ * work - Helper function to find the correct insertion point
+ *
+ * @cur: Current node being examined
+ * @par: Pointer to the parent node pointer
+ */
+
+void work(bst_t *cur, bst_t *par)
+{
+	while (cur != NULL)
+	{
+		par = cur;
+
+		if (cur->n > cur->n)
+		{
+			cur = cur->left;
+		}
+		else
+		{
+			cur = cur->right;
+		}
+	}
+}
+
+/**
+ * bst_insert - Inserts a value into a Binary Search Tree
+ *
+ * @tree: Double pointer to the root node of the BST
+ * @value: Value to insert into the BST
+ *
+ * Return: Pointer to the newly inserted node, or NULL on failure
+ */
+
 bst_t *bst_insert(bst_t **tree, int value)
 {
 	bst_t *new, *cur, *par;
@@ -52,27 +85,7 @@ bst_t *bst_insert(bst_t **tree, int value)
 
 	cur = *tree;
 	par = NULL;
-
-	while (cur != NULL)
-	{
-		par = cur;
-
-		if (value < cur->n)
-		{
-			cur = cur->left;
-		}
-		else if (value > cur->n)
-		{
-			cur = cur->right;
-		}
-		else
-		{
-			free(new);
-
-			return (NULL);
-		}
-	}
-
+	work(cur, par);
 	new->parent = par;
 
 	if (value < par->n)
