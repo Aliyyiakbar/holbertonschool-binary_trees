@@ -15,34 +15,27 @@ static avl_t *bst_insert_node(avl_t **tree, int value)
 	{
 		return (NULL);
 	}
-
 	cur = *tree;
 	parent = NULL;
-
 	while (cur != NULL)
 	{
 		parent = cur;
-
 		if (value == cur->n)
 		{
 			return (NULL);
 		}
-
 		cur = (value < cur->n) ? cur->left : cur->right;
 	}
-
 	new_node = (avl_t *)binary_tree_node(parent, value);
 	if (new_node == NULL)
 	{
 		return (NULL);
 	}
-
 	if (parent == NULL)
 	{
 		*tree = new_node;
 		return (new_node);
 	}
-
 	if (value < parent->n)
 	{
 		parent->left = new_node;
