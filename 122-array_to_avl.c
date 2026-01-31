@@ -1,11 +1,12 @@
 #include "binary_trees.h"
+#include <stdlib.h>
 
 /**
- * avl_search - Searches for a value in an AVL tree
+ * avl_search - Search for a value in an AVL tree
  * @tree: Pointer to the root node
- * @value: Value to search for
+ * @value: Value to find
  *
- * Return: Pointer to the node if found, otherwise NULL
+ * Return: Pointer to node if found, otherwise NULL
  */
 static avl_t *avl_search(avl_t *tree, int value)
 {
@@ -25,6 +26,22 @@ static avl_t *avl_search(avl_t *tree, int value)
 		}
 	}
 	return (NULL);
+}
+
+/**
+ * avl_free - Frees an AVL tree
+ * @tree: Pointer to the root node
+ */
+static void avl_free(avl_t *tree)
+{
+	if (tree == NULL)
+	{
+		return;
+	}
+
+	avl_free(tree->left);
+	avl_free(tree->right);
+	free(tree);
 }
 
 /**
@@ -56,7 +73,7 @@ avl_t *array_to_avl(int *array, size_t size)
 		node = avl_insert(&tree, array[i]);
 		if (node == NULL)
 		{
-			binary_tree_delete(tree);
+			avl_free(tree);
 			return (NULL);
 		}
 	}
