@@ -41,8 +41,8 @@ void _avl_free(avl_t *tree)
 		return;
 	}
 
-	avl_free(tree->left);
-	avl_free(tree->right);
+	_avl_free(tree->left);
+	_avl_free(tree->right);
 	free(tree);
 }
 
