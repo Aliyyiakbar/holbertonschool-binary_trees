@@ -118,25 +118,20 @@ int heap_extract(heap_t **root)
 	{
 		return (0);
 	}
-
 	value = (*root)->n;
 	size = heap_size(*root);
-
 	if (size == 1)
 	{
 		free(*root);
 		*root = NULL;
 		return (value);
 	}
-
 	last = node_at_index(*root, size);
 	if (last == NULL)
 	{
 		return (0);
 	}
-
 	(*root)->n = last->n;
-
 	parent = last->parent;
 	if (parent != NULL)
 	{
@@ -149,7 +144,6 @@ int heap_extract(heap_t **root)
 			parent->right = NULL;
 		}
 	}
-
 	free(last);
 	heapify_down(*root);
 
