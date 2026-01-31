@@ -99,6 +99,8 @@ int _binary_tree_balance(const binary_tree_t *tree)
 
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
+	int bal;
+
 	if (tree == NULL)
 	{
 		return (0);
@@ -109,7 +111,7 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 		return (0);
 	}
 
-	int bal = _binary_tree_balance(tree);
+	bal = _binary_tree_balance(tree);
 
 	if (bal < -1 || bal > 1)
 	{
