@@ -28,27 +28,6 @@ static bst_t *_bst_search(const bst_t *tree, int value)
 }
 
 /**
- * bst_min - Finds the minimum node in a BST subtree
- * @node: Pointer to the subtree root
- *
- * Return: Pointer to the minimum node
- */
-static bst_t *bst_min(bst_t *node)
-{
-	if (node == NULL)
-	{
-		return (NULL);
-	}
-
-	while (node->left != NULL)
-	{
-		node = node->left;
-	}
-
-	return (node);
-}
-
-/**
  * leaf_rem - Removes a leaf node from a BST
  * @root: Pointer to the BST root
  * @node: Pointer to the leaf node to remove
@@ -75,7 +54,6 @@ static bst_t *leaf_rem(bst_t *root, bst_t *node)
 	}
 
 	free(node);
-
 	return (root);
 }
 
@@ -88,14 +66,15 @@ static bst_t *leaf_rem(bst_t *root, bst_t *node)
  */
 static bst_t *rem_1(bst_t *root, bst_t *node)
 {
-	bst_t *child = (node->left != NULL) ? node->left : node->right;
-	bst_t *parent = node->parent;
+	bst_t *child, *parent;
+
+	child = (node->left != NULL) ? node->left : node->right;
+	parent = node->parent;
 
 	if (parent == NULL)
 	{
 		child->parent = NULL;
 		free(node);
-
 		return (child);
 	}
 
@@ -123,11 +102,18 @@ static bst_t *rem_1(bst_t *root, bst_t *node)
  */
 static bst_t *rem_2(bst_t *root, bst_t *node)
 {
-	bst_t *succ = bst_min(node->right);
-	bst_t *parent = succ->parent;
-	bst_t *child = succ->right;
+	bst_t *succ, *parent, *child;
+
+	succ = node->right;
+	while (succ->left != NULL)
+	{
+		succ = succ->left;
+	}
 
 	node->n = succ->n;
+
+	parent = succ->parent;
+	child = succ->right;
 
 	if (parent->left == succ)
 	{
@@ -144,7 +130,6 @@ static bst_t *rem_2(bst_t *root, bst_t *node)
 	}
 
 	free(succ);
-
 	return (root);
 }
 
