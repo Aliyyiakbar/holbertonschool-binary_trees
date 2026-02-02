@@ -72,4 +72,3 @@ properties) up to advanced structures like **BST**, **AVL**, and **Max Binary He
 ## Authors
 
 Aliyyiakbar Shirinli  
-Celal Ehmedli
